@@ -32,7 +32,7 @@ View Binding was used in this project to bind the views.
 The dependency injection framework used in this case was Koin because of its simplicity when configurating dependencies.
 
 ### Remote Connections
-The library Square okhttp was used for both, web socket connections and API RESTFUL operations 
+The library Square okhttp was used for API RESTFUL operations 
 ### Flavors
 Thinking of Scalability, when configuring the app, two flavors were created. For the time being, there is no difference between them.
 
