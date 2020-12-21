@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <Transition
+        app:constraintSetStart="@+id/start"
+        app:constraintSetEnd="@+id/end">
+
+        <KeyFrameSet>
+            <KeyPosition
+                app:framePosition="25"
+                app:motionTarget="@id/tv_book"
+                app:keyPositionType="parentRelative"
+                app:percentY="0.6"
+                />
+            <KeyPosition
+                app:framePosition="50"
+                app:motionTarget="@id/tv_book"
+                app:keyPositionType="parentRelative"
+                app:percentY="0.5"
+                />
+            <KeyPosition
+                app:framePosition="75"
+                app:motionTarget="@id/tv_book"
+                app:keyPositionType="parentRelative"
+                app:percentY="0.6"
+                />
+            <KeyAttribute
+                app:framePosition="50"
+                app:motionTarget="@id/tv_book"
+                />
+            <KeyAttribute
+                app:framePosition="100"
+                app:motionTarget="@id/tv_book"
+                />
+            <KeyAttribute
+                app:framePosition="85"
+                app:motionTarget="@id/tv_value"
+                android:alpha="0.0"
+                />
+            <KeyAttribute
+                app:framePosition="85"
+                app:motionTarget="@id/btn_back"
+                android:alpha="0.0"
+                />
+            <KeyAttribute
+                app:framePosition="100"
+                app:motionTarget="@id/background"
+                android:translationY="90dp" />
+        </KeyFrameSet>
+    </Transition>
+
+    <!-- Constraints to apply at the start of the animation -->
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@id/tv_book"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/btn_back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginBottom="@dimen/dimen_16dp"
+            />
+        <Constraint
+            android:id="@id/tv_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.0"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            app:layout_constraintStart_toEndOf="@id/btn_back"
+            app:layout_constraintBottom_toBottomOf="@id/tv_book"
+            app:layout_constraintTop_toTopOf="@id/tv_book"
+            />
+        <Constraint
+            android:id="@id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="1.0"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tv_book"
+            app:layout_constraintTop_toTopOf="@id/tv_book"
+            />
+    </ConstraintSet>
+
+    <!-- Constraints to apply at the end of the animation -->
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@id/tv_book"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="@dimen/dimen_24dp"
+            />
+        <Constraint
+            android:id="@id/tv_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="1.0"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            app:layout_constraintStart_toEndOf="@id/btn_back"
+            app:layout_constraintBottom_toBottomOf="@id/tv_book"
+            app:layout_constraintTop_toTopOf="@id/tv_book"
+            />
+        <Constraint
+            android:id="@id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="1.0"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tv_book"
+            app:layout_constraintTop_toTopOf="@id/tv_book"
+            />
+    </ConstraintSet>
+</MotionScene>

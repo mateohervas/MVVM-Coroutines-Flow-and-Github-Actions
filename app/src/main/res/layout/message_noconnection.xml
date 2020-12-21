@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container_connectivity"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dimen_90dp"
+    android:background="@color/no_connection_gray"
+    android:elevation="@dimen/dimen_10dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="@dimen/dimen_16dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_no_connection" />
+
+    <TextView
+        android:id="@+id/tv_connectivity_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:text="@string/no_internet"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/text_16sp" />
+
+</LinearLayout>

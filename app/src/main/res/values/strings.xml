@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Bitso Dream</string>
+
+    <string name="retry">Retry</string>
+    <string name="ok">OK</string>
+    <string name="error">Error</string>
+    <string name="unknown_error">Unknown Error</string>
+    <string name="go_to_book_detail">Go to book Detail</string>
+    <string name="x_space_y">%1$s %2$s</string>
+    <string name="last_value">Last Value: %1$s %2$s</string>
+    <string name="go_back">go back</string>
+    <string name="no_internet">You don\'t have a stable connection!</string>
+    <string name="ask_price">Ask Price: %1$s %2$s</string>
+    <string name="day_low">Day Low: %1$s %2$s</string>
+    <string name="day_high">Day High: %1$s %2$s</string>
+    <string name="volume">24 Hour Volume: %1$s</string>
+    <string name="spread">Spread: %1$s %2$s</string>
+</resources>
