@@ -10,18 +10,19 @@ import com.shadows.bitsodream.data.remote.model.Book
 import com.shadows.bitsodream.ui.booksdetail.BookDetailActivity
 import com.shadows.bitsodream.utils.BOOK
 import kotlinx.android.synthetic.main.cardview_book.view.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class BooksAdapter(): RecyclerView.Adapter<BooksAdapter.ViewHolder>(){
 
     private val books = ArrayList<Book>()
 
     fun addAll(list: ArrayList<Book>){
+        books.clear()
         list.forEach {
             item ->
             books.add(item)
-            notifyItemInserted(books.size-1)
         }
-
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,6 +38,7 @@ class BooksAdapter(): RecyclerView.Adapter<BooksAdapter.ViewHolder>(){
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
 
+        @ExperimentalCoroutinesApi
         fun bindView(book: Book){
             itemView.tv_value.text = book.book?.substringBefore("_")
             itemView.tv_current_price.text = itemView.context.getString(R.string.x_space_y,book.book?.substringAfter("_"),book.last)
