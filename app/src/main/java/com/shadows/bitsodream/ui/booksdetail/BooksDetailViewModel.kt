@@ -4,13 +4,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.mikephil.charting.data.Entry
+import com.shadows.bitsodream.data.local.dao.BooksDAO
 import com.shadows.bitsodream.data.remote.model.Book
 import com.shadows.bitsodream.data.remote.model.BookStatistic
 import com.shadows.bitsodream.domain.models.Resource
 import com.shadows.bitsodream.domain.repository.BookDetailRepository
+import com.shadows.bitsodream.domain.repository.BooksRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
@@ -19,6 +22,10 @@ class BooksDetailViewModel(private val bookDetailRepository: BookDetailRepositor
 
     //this Mutable Live Data object uses an ArrayList of an Entry because the view is interested only in Entries for the chart
     val bookHistoricResponse = MutableLiveData<Resource<ArrayList<Entry>>>()
+
+    //mutable live data that will notify about insertion operations
+    val savingBookResponse = MutableLiveData<Resource<com.shadows.bitsodream.data.local.models.Book>>()
+
 
     //method that will listen for the repository method results and will emit the state with the data accordingly
     fun getBookHistoric(book:String){
@@ -42,6 +49,36 @@ class BooksDetailViewModel(private val bookDetailRepository: BookDetailRepositor
                         }
 
                 }
+        }
+    }
+
+    fun saveComment(book: com.shadows.bitsodream.data.local.models.Book){
+        viewModelScope.launch {
+
+            kotlin.runCatching {
+                savingBookResponse.value = Resource.loading(null)
+                bookDetailRepository.insertBook(book)
+            }.onFailure {
+                savingBookResponse.value = Resource.error(null,it.message?:"Error")
+            }.onSuccess {
+                savingBookResponse.value = Resource.success(book)
+            }
+
+        }
+    }
+
+    fun getBookById(name:String){
+        viewModelScope.launch {
+            bookDetailRepository.getBookById(name)
+                .onStart {
+                    savingBookResponse.value = Resource.loading(null)
+
+            }.catch {
+                    savingBookResponse.value = Resource.error(null,it.message?:"Error")
+
+            }.collect {
+                    savingBookResponse.value = Resource.success(it)
+            }
         }
     }
 

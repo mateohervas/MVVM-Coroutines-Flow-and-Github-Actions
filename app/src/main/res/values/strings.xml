@@ -15,4 +15,6 @@
     <string name="day_high">Day High: %1$s %2$s</string>
     <string name="volume">24 Hour Volume: %1$s</string>
     <string name="spread">Spread: %1$s %2$s</string>
+    <string name="write_a_comment_that_you_would_like_to_save">Write a comment that you would like to save</string>
+    <string name="save">Save</string>
 </resources>

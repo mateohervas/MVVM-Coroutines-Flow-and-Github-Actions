@@ -43,4 +43,9 @@ open class BaseActivity: AppCompatActivity(), ConnectivityChangesCallback {
             container_connectivity.showView(!amConnected)
         }
     }
+
+    override fun onDestroy() {
+        myInternetMonitoringService.disable(this)
+        super.onDestroy()
+    }
 }
