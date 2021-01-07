@@ -61,11 +61,19 @@ class BookDetailActivity:BaseActivity() {
         //calculation of the spread value according to instructions
        val spread = book.ask?.toDoubleOrNull()?.let { book.bid?.toDoubleOrNull()?.minus(it) }
         binding.tvSpread.text = getString(R.string.spread,currency,spread.toString())
+        book.book?.let {
+            viewModel.getBookById(it)
+            checkForComments()
+        }
+        binding.btnSaveComment.setOnClickListener {
+            saveComment()
+        }
+
     }
 
     //This method will listen for the Historic of the book and use it to call the populate graph method with the data necessary for the graph
     private fun listenForHistoricChanges(){
-        viewModel.bookHistoricResponse.observe(this, Observer{
+        viewModel.bookHistoricResponse.observe(this, {
             when(it.status){
                 Status.SUCCESS ->{
                     isLoading(false)
@@ -86,6 +94,36 @@ class BookDetailActivity:BaseActivity() {
                 }
             }
         })
+    }
+    private fun checkForComments(){
+        viewModel.savingBookResponse.observe(this){
+            when(it.status){
+                Status.SUCCESS ->{
+                    isLoading(false)
+                    binding.etComment.setText(it.data?.comment)
+
+                }
+                Status.ERROR -> {
+                    isLoading(false)
+                    PresentationUtils.showDialog(this,it.message?:"Error"){
+                        viewModel.getBookById(book.book!!)
+                    }
+                }
+                Status.LOADING -> {
+                    isLoading(true)
+                }
+            }
+        }
+    }
+
+    private fun saveComment(){
+        val comment = binding.etComment.text.toString()
+        if(comment.isNotEmpty()){
+            val localBook = com.shadows.bitsodream.data.local.models.Book(book.book!!,comment)
+            viewModel.saveComment(localBook)
+            checkForComments()
+        }
+
     }
 
     //method in charge of animating app bar layout in book detail view

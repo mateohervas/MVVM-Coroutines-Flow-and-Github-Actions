@@ -1,7 +1,14 @@
 package com.shadows.bitsodream.ui.booksdetail
 
+import android.content.Context
+import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.mikephil.charting.data.Entry
+import com.shadows.bitsodream.data.local.BookRoomDatabase
+import com.shadows.bitsodream.data.local.dao.BooksDAO
 import com.shadows.bitsodream.data.remote.model.BaseResponse
 import com.shadows.bitsodream.data.remote.model.Book
 import com.shadows.bitsodream.data.remote.model.BookStatistic
@@ -24,21 +31,24 @@ import org.junit.Test
 
 import org.junit.Assert.*
 import org.junit.Rule
+import org.junit.runner.RunWith
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.stopKoin
 import org.koin.core.context.unloadKoinModules
 import org.koin.test.KoinTestRule
 import org.mockito.MockitoAnnotations
+import org.robolectric.annotation.Config
 import java.security.KeyStore
 
 @ExperimentalCoroutinesApi
+@Config(sdk = [Build.VERSION_CODES.O_MR1])
+@RunWith(AndroidJUnit4::class)
 class BooksDetailViewModelTest {
 
+    private lateinit var db: BookRoomDatabase
+    private lateinit var booksDAO: BooksDAO
+    private lateinit var booksRepository: BookDetailRepository
 
-    @get:Rule
-    val koinTestRule = KoinTestRule.create {
-        modules(myBitsoModules)
-    }
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
@@ -46,27 +56,33 @@ class BooksDetailViewModelTest {
     val testCoroutineRule = TestCoroutineRule()
 
     @Before
-    fun setUp() {
-        MockitoAnnotations.initMocks(this)
-        loadKoinModules(myBitsoModules)
+    fun createDB(){
+        val context: Context = ApplicationProvider.getApplicationContext()
+        // Using an in-memory database because the information stored here disappears when the
+        // process is killed.
+        db = Room.inMemoryDatabaseBuilder(context, BookRoomDatabase::class.java)
+            // Allowing main thread queries, just for testing.
+            .allowMainThreadQueries()
+            .build()
+        booksDAO = db.bookDao()
+        booksRepository = BookDetailRepository(MockDataSource(),booksDAO)
     }
 
     @After
     fun tearDown() {
-        unloadKoinModules(myBitsoModules)
-        stopKoin()
+        db.close()
     }
 
     @Test
     fun getBooksSuccessfully_shouldGetListOfBooks() {
-        val repo = BookDetailRepository(MockDataSource())
-        val viewModel = BooksDetailViewModel(repo)
+
+        val viewModel = BooksDetailViewModel(booksRepository)
         //given
         val expected = ArrayList<BookStatistic>()
         val book = "btc"
         runBlocking {
             //when
-            val flow = repo.getBookHistory(book).first()
+            val flow = booksRepository.getBookHistory(book).first()
             assertEquals(expected,flow)
             viewModel.getBookHistoric(book)
         }
@@ -80,8 +96,8 @@ class BooksDetailViewModelTest {
 
     @Test
     fun getBooksException_shouldGetErrorMessage(){
-        val repo = BookDetailRepository(MockDataSource())
-        val viewModel = BooksDetailViewModel(repo)
+
+        val viewModel = BooksDetailViewModel(booksRepository)
         val book = "btc"
 
         runBlocking {
@@ -91,6 +107,19 @@ class BooksDetailViewModelTest {
         viewModel.bookHistoricResponse.observeForever {
             if(it.status==Status.ERROR){
                 assertNull(it.data)
+            }
+        }
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun insertAndGetBook() = runBlocking {
+        val viewModel = BooksDetailViewModel(booksRepository)
+        val book = com.shadows.bitsodream.data.local.models.Book("btc","test")
+        booksRepository.insertBook(book)
+        viewModel.savingBookResponse.observeForever { resource ->
+            if(resource.status == Status.SUCCESS){
+                assert(book.name == resource.data?.name)
             }
         }
     }

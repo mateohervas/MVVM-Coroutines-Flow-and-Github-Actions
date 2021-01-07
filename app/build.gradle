@@ -39,6 +39,10 @@ android {
         }
     }
 
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
+
     flavorDimensions "version"
     productFlavors {
         dev {
