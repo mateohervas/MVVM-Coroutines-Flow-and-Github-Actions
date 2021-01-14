@@ -3,6 +3,7 @@ package com.shadows.bitsodream.ui.books
 import androidx.lifecycle.*
 import com.shadows.bitsodream.data.remote.model.Book
 import com.shadows.bitsodream.domain.models.Resource
+import com.shadows.bitsodream.domain.models.Ticker
 import com.shadows.bitsodream.domain.repository.BooksRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
@@ -13,7 +14,7 @@ import kotlinx.coroutines.launch
 @ExperimentalCoroutinesApi
 class BooksViewModel(private val booksRepository: BooksRepository): ViewModel() {
 
-    val booksResponse = MutableLiveData<Resource<ArrayList<Book>>>()
+    val booksResponse = MutableLiveData<Resource<List<Ticker>>>()
 
     //this method will get the result of the APIs and handle the states
     fun getBooks(){
@@ -27,7 +28,7 @@ class BooksViewModel(private val booksRepository: BooksRepository): ViewModel() 
                 }
                 .collect {
                     if(it.error==null){
-                        val payload = it.payload as ArrayList<Book>
+                        val payload = it.payload as List<Ticker>
                         booksResponse.value = Resource.success(payload)
                     }else{
                         booksResponse.value = Resource.error(null, it.error.message?:"Error" )

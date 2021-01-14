@@ -6,8 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.github.mikephil.charting.data.Entry
 import com.shadows.bitsodream.data.remote.model.Book
 import com.shadows.bitsodream.data.remote.model.BookStatistic
+import com.shadows.bitsodream.domain.models.BookDomain
 import com.shadows.bitsodream.domain.models.Resource
 import com.shadows.bitsodream.domain.repository.BookDetailRepository
+import com.shadows.bitsodream.utils.logD
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
@@ -21,15 +23,16 @@ class BooksDetailViewModel(private val bookDetailRepository: BookDetailRepositor
     val bookHistoricResponse = MutableLiveData<Resource<ArrayList<Entry>>>()
 
     //method that will listen for the repository method results and will emit the state with the data accordingly
-    fun getBookHistoric(book:String){
+    fun getBookHistoric(book:BookDomain){
         viewModelScope.launch {
-            bookDetailRepository.getBookHistory(book)
+            bookDetailRepository.getBookHistory("${book.major}_${book.minor}")
                 .onStart {
                     bookHistoricResponse.value = Resource.loading(null)
                 }.catch {
                     bookHistoricResponse.value = Resource.error(null,it.message?:"Error")
                 }
                 .collect {
+
                         val bookHistoric = it
                     //this snippet gets the data from the repository and transforms it to Entries for the chart
                         if(bookHistoric.isNotEmpty()){

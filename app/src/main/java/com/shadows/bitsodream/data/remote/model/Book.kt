@@ -15,6 +15,5 @@ data class Book(
 	var ask: String? = null,
 	@SerializedName("created_at")
 	var createdAt: String? = null,
-	var bid: String? = null,
-	var change24: String? = null
+	var bid: String? = null
 ) : Parcelable

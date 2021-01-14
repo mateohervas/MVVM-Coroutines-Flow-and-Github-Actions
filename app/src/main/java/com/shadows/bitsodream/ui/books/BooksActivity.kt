@@ -8,6 +8,7 @@ import com.shadows.bitsodream.data.remote.model.Book
 import com.shadows.bitsodream.databinding.ActivityMainBinding
 import com.shadows.bitsodream.domain.models.Resource
 import com.shadows.bitsodream.domain.models.Status
+import com.shadows.bitsodream.domain.models.Ticker
 import com.shadows.bitsodream.ui.BaseActivity
 import com.shadows.bitsodream.ui.books.adapters.BooksAdapter
 import com.shadows.bitsodream.utils.logD
@@ -43,11 +44,11 @@ class BooksActivity:BaseActivity() {
 
     //method to observe changes in API call and add values to Recycler View
     private fun populateRecyclerView(){
-        viewModel.booksResponse.observe(this, Observer{
+        viewModel.booksResponse.observe(this, {
             when(it.status){
                 Status.SUCCESS ->{
                     isLoading(false)
-                    val books = it.data as ArrayList<Book>
+                    val books = it.data as List<Ticker>
                     booksAdapter.addAll(books)
                 }
                 Status.LOADING ->{
