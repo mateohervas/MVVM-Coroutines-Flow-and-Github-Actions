@@ -15,6 +15,7 @@ import com.shadows.bitsodream.data.remote.model.ErrorResponse
 import com.shadows.bitsodream.di.myBitsoModules
 import com.shadows.bitsodream.domain.models.Resource
 import com.shadows.bitsodream.domain.models.Status
+import com.shadows.bitsodream.domain.models.Ticker
 import com.shadows.bitsodream.domain.repository.BooksRepository
 import com.shadows.bitsodream.ui.data.MockDataSource
 import com.shadows.bitsodream.ui.data.MockErrorSource
@@ -62,7 +63,7 @@ class BooksViewModelTest {
          val repo = BooksRepository(MockDataSource())
         val viewModel =BooksViewModel(repo)
         //given
-        val expected = BaseResponse<ArrayList<Book>>(true,ArrayList(),null)
+        val expected = BaseResponse<ArrayList<Ticker>>(true,ArrayList(),null)
 
         runBlocking {
             //when
@@ -71,7 +72,7 @@ class BooksViewModelTest {
             viewModel.getBooks()
         }
 
-        val resource = Resource<ArrayList<Book>>(Status.SUCCESS,expected.payload,null)
+        val resource = Resource<ArrayList<Ticker>>(Status.SUCCESS,expected.payload,null)
         viewModel.booksResponse.observeForever {
             assertEquals(it,resource)
         }
@@ -83,14 +84,14 @@ class BooksViewModelTest {
         val repo = BooksRepository(MockErrorSource())
         val viewModel =BooksViewModel(repo)
         //given
-        val expected = BaseResponse<ArrayList<Book>>(false,null, ErrorResponse("",""))
+        val expected = BaseResponse<ArrayList<Ticker>>(false,null, ErrorResponse("",""))
         runBlocking {
             //when
             val flow = repo.getBooks().first()
             assertEquals(expected,flow)
             viewModel.getBooks()
         }
-        val resource = Resource<ArrayList<Book>>(Status.ERROR,null,"")
+        val resource = Resource<ArrayList<Ticker>>(Status.ERROR,null,"")
         viewModel.booksResponse.observeForever {
             assertEquals(it,resource)
         }

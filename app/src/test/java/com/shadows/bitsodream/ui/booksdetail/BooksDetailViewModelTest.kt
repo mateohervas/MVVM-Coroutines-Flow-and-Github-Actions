@@ -7,6 +7,7 @@ import com.shadows.bitsodream.data.remote.model.Book
 import com.shadows.bitsodream.data.remote.model.BookStatistic
 import com.shadows.bitsodream.data.remote.model.ErrorResponse
 import com.shadows.bitsodream.di.myBitsoModules
+import com.shadows.bitsodream.domain.models.BookDomain
 import com.shadows.bitsodream.domain.models.Resource
 import com.shadows.bitsodream.domain.models.Status
 import com.shadows.bitsodream.domain.repository.BookDetailRepository
@@ -63,12 +64,13 @@ class BooksDetailViewModelTest {
         val viewModel = BooksDetailViewModel(repo)
         //given
         val expected = ArrayList<BookStatistic>()
-        val book = "btc"
+        val bookDomain = BookDomain("btc","mxn")
+        val book = "btc_mxn"
         runBlocking {
             //when
             val flow = repo.getBookHistory(book).first()
             assertEquals(expected,flow)
-            viewModel.getBookHistoric(book)
+            viewModel.getBookHistoric(bookDomain)
         }
         viewModel.bookHistoricResponse.observeForever {
             if (it.status == Status.SUCCESS) {
@@ -82,7 +84,7 @@ class BooksDetailViewModelTest {
     fun getBooksException_shouldGetErrorMessage(){
         val repo = BookDetailRepository(MockDataSource())
         val viewModel = BooksDetailViewModel(repo)
-        val book = "btc"
+        val book = BookDomain("btc","mxn")
 
         runBlocking {
             viewModel.getBookHistoric(book)
