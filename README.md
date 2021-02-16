@@ -1,5 +1,5 @@
-# My Bitso Dream
-Bitso's Techincal Assignment by Mateo Hervas. 
+# MVVM - Coroutines - Flow and Github Actions
+ By Mateo Hervas. 
 
 ## The Assignment
 Build an Android application that shows the available order books and their detailed information. 
@@ -43,14 +43,13 @@ The Android’s connectivity manager class was used in this assignment to monito
 Both, the Splash animation and the Loader animation where implemented with the use of Airbnb’s Lottie library 
 For the Animated App bar in the Product detail Activity, Android Motion Layout was used. 
 
-###Kotlin Extension Functions
+### Kotlin Extension Functions
 
 In order to make the code more mantainable, Kotlin extension functions were used. For instance, to show or hide a view.
  
 ### Testing
 Unit Tests where written during the development of the app
 
-## Extra Credits
 ### Charts 
 For the Extra credit, MPAndroidChart library was used to create the chart that shows the change of the value of the past month
 
