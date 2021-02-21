@@ -6,6 +6,7 @@ import com.github.mikephil.charting.data.Entry
 import com.google.android.material.appbar.AppBarLayout
 import com.shadows.bitsodream.R
 import com.shadows.bitsodream.databinding.ActivityBookDetailBinding
+import com.shadows.bitsodream.domain.models.Resource
 import com.shadows.bitsodream.domain.models.Status
 import com.shadows.bitsodream.domain.models.Ticker
 import com.shadows.bitsodream.ui.BaseActivity
@@ -63,21 +64,21 @@ class BookDetailActivity:BaseActivity() {
     //This method will listen for the Historic of the book and use it to call the populate graph method with the data necessary for the graph
     private fun listenForHistoricChanges(){
         viewModel.bookHistoricResponse.observe(this, Observer{
-            when(it.status){
-                Status.SUCCESS ->{
+            when(it){
+                is Resource.Success ->{
                     isLoading(false)
                     //this will set the chart with the behaviour of the book in the last month
                     val historic = it.data as ArrayList<Entry>
-                    val chart = MyLineChart(binding.chartYearDifference,historic,"${ticker.book}'s historic of the last month")
+                    val chart = MyLineChart(binding.chartYearDifference,historic,"${ticker.book.major}'s historic of the last month")
                     chart.setupChart()
 
                 }
-                Status.LOADING ->{
+                is Resource.Loading ->{
                     isLoading(true)
                 }
-                Status.ERROR -> {
+                is Resource.Failure -> {
                     isLoading(false)
-                    PresentationUtils.showDialog(this,it.message?:"Error"){
+                    PresentationUtils.showDialog(this,it.throwable.message?:"Error"){
                         viewModel.getBookHistoric(ticker.book)
                     }
                 }

@@ -14,24 +14,25 @@ import kotlinx.coroutines.launch
 @ExperimentalCoroutinesApi
 class BooksViewModel(private val booksRepository: BooksRepository): ViewModel() {
 
-    val booksResponse = MutableLiveData<Resource<List<Ticker>>>()
+    val booksResponse = MutableLiveData<Resource<List<Ticker>?>>()
 
     //this method will get the result of the APIs and handle the states
     fun getBooks(){
         viewModelScope.launch {
             booksRepository.getBooks()
                 .onStart {
-                    booksResponse.value = Resource.loading(null)
+                    booksResponse.value = Resource.Loading()
                 }
                 .catch { exception ->
-                    booksResponse.value = Resource.error(null, exception.message?:"Error" )
+                    booksResponse.value = Resource.Failure(exception)
                 }
                 .collect {
                     if(it.error==null){
                         val payload = it.payload as List<Ticker>
-                        booksResponse.value = Resource.success(payload)
+                        booksResponse.value = Resource.Success(payload)
                     }else{
-                        booksResponse.value = Resource.error(null, it.error.message?:"Error" )
+                        val throwable = Throwable(it.error.message)
+                        booksResponse.value = Resource.Failure(throwable)
                     }
 
                 }

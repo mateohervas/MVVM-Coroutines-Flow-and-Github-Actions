@@ -1,18 +1,12 @@
 package com.shadows.bitsodream.domain.models
 
 //Base class to be able to handle states with View Model
-data class Resource<out T>(val status: Status,val data: T?,val message: String?) {
+sealed class Resource<out T>() {
 
-    companion object {
-        fun <T> success(data: T): Resource<T> =
-            Resource(status = Status.SUCCESS, data = data, message = null)
+    class Loading<out T> : Resource<T>()
+    data class Success<out T>(val data: T) : Resource<T>()
+    data class Failure<out T>(val throwable: Throwable) : Resource<T>()
 
-        fun <T> error(data: T?, message: String?): Resource<T> =
-            Resource(status = Status.ERROR, data = data, message = message)
-
-        fun <T> loading(data: T?): Resource<T> =
-            Resource(status = Status.LOADING, data = data, message = null)
-    }
 }
 
 enum class Status {

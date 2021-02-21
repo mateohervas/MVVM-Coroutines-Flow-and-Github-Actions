@@ -45,18 +45,18 @@ class BooksActivity:BaseActivity() {
     //method to observe changes in API call and add values to Recycler View
     private fun populateRecyclerView(){
         viewModel.booksResponse.observe(this, {
-            when(it.status){
-                Status.SUCCESS ->{
+            when(it){
+                is Resource.Success ->{
                     isLoading(false)
                     val books = it.data as List<Ticker>
                     booksAdapter.addAll(books)
                 }
-                Status.LOADING ->{
+                is Resource.Loading ->{
                     isLoading(true)
                 }
-                Status.ERROR -> {
+                is Resource.Failure -> {
                     isLoading(false)
-                    PresentationUtils.showDialog(this,it.message?:"Error"){
+                    PresentationUtils.showDialog(this,it.throwable.message?:"Error"){
                         viewModel.getBooks()
                     }
                 }

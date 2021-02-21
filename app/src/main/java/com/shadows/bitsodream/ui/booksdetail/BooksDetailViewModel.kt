@@ -27,9 +27,9 @@ class BooksDetailViewModel(private val bookDetailRepository: BookDetailRepositor
         viewModelScope.launch {
             bookDetailRepository.getBookHistory("${book.major}_${book.minor}")
                 .onStart {
-                    bookHistoricResponse.value = Resource.loading(null)
+                    bookHistoricResponse.value = Resource.Loading()
                 }.catch {
-                    bookHistoricResponse.value = Resource.error(null,it.message?:"Error")
+                    bookHistoricResponse.value = Resource.Failure(it)
                 }
                 .collect {
 
@@ -41,7 +41,7 @@ class BooksDetailViewModel(private val bookDetailRepository: BookDetailRepositor
                                 val entry = Entry(index.toFloat(),bookStatistic.value!!.toFloat())
                                 graphEntries.add(entry)
                             }
-                            bookHistoricResponse.value = Resource.success(graphEntries)
+                            bookHistoricResponse.value = Resource.Success(graphEntries)
                         }
 
                 }
